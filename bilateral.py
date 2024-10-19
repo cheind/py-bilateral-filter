@@ -21,7 +21,6 @@ def bilateral_filter(x, sigma_space, sigma_channel, k=None):
     xv = sliding_window_view(xp, x.shape[1:], axis=range(1, x.ndim)).squeeze(
         1 + space_dims
     )
-    print(xv.shape)
     summed = 0
     weights = 0
 
@@ -39,24 +38,23 @@ def bilateral_filter(x, sigma_space, sigma_channel, k=None):
     return summed / weights
 
 
-# n = 1000
-# s = np.ones(n)
-# s[n // 2 :] = 0
-# s = s + np.random.randn(n) * 1e-2
+n = 1000
+s = np.ones(n)
+s[n // 2 :] = 0
+s = s + np.random.randn(n) * 1e-2
 
-# bf = bilateral_filter(s.reshape(1, -1, 1), 50, 0.1).squeeze()
-# f = bilateral_filter(s.reshape(1, -1, 1), 50, 20).squeeze()
+bf = bilateral_filter(s.reshape(1, -1, 1), 50, 0.1).squeeze()
+f = bilateral_filter(s.reshape(1, -1, 1), 50, 20).squeeze()
 
 import matplotlib.pyplot as plt
 
-# plt.plot(np.linspace(0, 1, n), s, label="x")
-# plt.plot(np.linspace(0, 1, n), f, label="gaussian")
-# plt.plot(np.linspace(0, 1, n), bf, label="bilateral")
-# plt.legend()
-# plt.show()
+plt.plot(np.linspace(0, 1, n), s, label="x")
+plt.plot(np.linspace(0, 1, n), f, label="gaussian")
+plt.plot(np.linspace(0, 1, n), bf, label="bilateral")
+plt.legend()
+plt.show()
 
-img = plt.imread("lena.png") / 255.0
-print(img.shape)
+img = plt.imread("lena.png", format="L")[..., :1] / 255.0
 gf = bilateral_filter(img[None], 8, 20).squeeze(0)
 bf = bilateral_filter(img[None], 8, 0.001).squeeze(0)
 
