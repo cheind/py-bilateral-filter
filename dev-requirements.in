@@ -1,1 +1,4 @@
 matplotlib
+pytest
+pytest-benchmark
+opencv-python-headless
