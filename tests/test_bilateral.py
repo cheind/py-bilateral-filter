@@ -7,7 +7,7 @@ from bilateral import bilateral_filter
 
 @pytest.mark.parametrize("shape", [(256, 1), (256, 256, 1)])
 @pytest.mark.parametrize("sigma_space", [4, 8])
-def test_bilateral(benchmark, shape, sigma_space):
+def test_this_bench(benchmark, shape, sigma_space):
     x = np.random.randn(*shape).astype(np.float32)
 
     _ = benchmark(bilateral_filter, x, sigma_space, 0.1)
@@ -15,23 +15,22 @@ def test_bilateral(benchmark, shape, sigma_space):
 
 @pytest.mark.parametrize("shape", [(256, 1), (256, 256, 1)])
 @pytest.mark.parametrize("sigma_space", [4, 8, 10])
-def test_cv(benchmark, shape, sigma_space):
+def test_cv_bench(benchmark, shape, sigma_space):
     x = np.random.randn(*shape).astype(np.float32)
 
     _ = benchmark(cv2.bilateralFilter, x, -1, 0.1, sigma_space)
 
 
-def test_with_cv2():
-    x = np.random.randn(256, 1).astype(np.float32) * 1e-2
+def test_acc():
+    gen = np.random.default_rng(123)
+    x = gen.normal(0, 1e-2, (256, 1)).astype(np.float32)
     x[:128] += 1
 
     bf = bilateral_filter(x, 8, 0.1)
     c = cv2.bilateralFilter(x, -1, 0.1, 8)
 
-    # import matplotlib.pyplot as plt
+    assert (abs(bf).mean() - 0.5) < 1e-2
+    assert (abs(c).mean() - 0.5) < 1e-2
 
-    # plt.plot(np.arange(256), bf)
-    # plt.plot(np.arange(256), c)
-    # plt.show()
-
-    print(abs(bf - c).max())
+    # ignore beginning and end
+    assert (abs(bf[30:-30] - c[30:-30]).max()) < 1e-3

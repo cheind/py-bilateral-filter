@@ -56,7 +56,7 @@ and compute for all pixel location 'p' in parallel
 ```
 
 The contributing shifts are computed from the cut-off kernel size
-$k=2*\left \lceil{3\sigma_s}\right \rceil+1$. This provided method is vectorized, but still slow for large sigma values, because it requires $O(|S|*|k|^S)$ evaluations.
+$k=2r(1.5\sigma_s)+1$, where $r$ rounds to nearest integer This provided method is vectorized, but still slow for large sigma values, because it requires $O(|S|*|k|^S)$ evaluations.
 
 
 ## More examples

@@ -31,7 +31,7 @@ def bilateral_filter(x, sigma_space, sigma_channel, k=None):
         w(p) = \\sum_{o} w(p-o,p)
 
     The contributing shifts are computed from the cut-off kernel size
-    $k=2*ceil(3*sigma_space)+1$.
+    $k=2*round(1.5*sigma_space)+1$.
 
     This method is vectorized, but still slow for large sigma values,
     because it requires O(|S|*|k|^2) evaluations.
@@ -63,7 +63,7 @@ def bilateral_filter(x, sigma_space, sigma_channel, k=None):
 
     if k is None:
         # odd kernel size with at least 3 sigma on each side.
-        k = 2 * int(np.ceil(3 * sigma_space)) + 1
+        k = 2 * int(np.round(1.5 * sigma_space)) + 1
     half_k = int(k / 2)
 
     # Pad space dimensions
